@@ -12,11 +12,21 @@ TARGET			:= main.c
 TARGET_FILE := $(notdir $(TARGET))
 OUTPUT_FILE := $(patsubst %.c,$(BUILD_DIR)/%.exe,$(TARGET_FILE))
 
-all: clearScreen $(TARGET) run clean
+all: clearScreen exec run clean
 
 run: $(OUTPUT_FILE)
 
+exec: $(TARGET)
+
 rebuild: clean all
+
+clean:
+	@rm -f $(BUILD_DIR)/*
+
+clearScreen:
+	@clear
+
+.PHONY: all run exec rebuild clean clearScreen
 
 $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -30,11 +40,3 @@ $(TARGET): $(OBJ_FILES)
 $(OUTPUT_FILE): $(TARGET_FILE)
 	@printf "Execution at:\n  "
 	$@
-
-clean:
-	@rm -f $(BUILD_DIR)/*
-
-clearScreen:
-	@clear
-
-.PHONY: all run clean clearScreen rebuild
